@@ -104,6 +104,11 @@ namespace Avalonia.DesignerSupport.Remote
         public void CanResize(bool value)
         {
         }
+
+        public void SetAllowTransparency(bool value)
+        {
+
+        }
     }
 
     class ClipboardStub : IClipboard

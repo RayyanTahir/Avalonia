@@ -816,6 +816,8 @@ namespace Avalonia.Win32.Interop
         [DllImport("user32.dll")]
         public static extern bool SetFocus(IntPtr hWnd);
         [DllImport("user32.dll")]
+        public static extern bool SetLayeredWindowAttributes(IntPtr hWnd, IntPtr crKey, IntPtr bAlpha, IntPtr dwFlags);
+        [DllImport("user32.dll")]
         public static extern bool SetParent(IntPtr hWnd, IntPtr hWndNewParent);
         [DllImport("user32.dll")]
         public static extern bool ShowWindow(IntPtr hWnd, ShowWindowCommand nCmdShow);

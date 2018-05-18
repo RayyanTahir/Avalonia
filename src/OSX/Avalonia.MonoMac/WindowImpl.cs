@@ -140,5 +140,10 @@ namespace Avalonia.MonoMac
             NSApplication.SharedApplication.RunModalForWindow(Window);
             return new ModalDisposable(this);
         }
+
+        public void SetAllowTransparency(bool value)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

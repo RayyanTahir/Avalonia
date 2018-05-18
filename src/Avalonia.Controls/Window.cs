@@ -101,6 +101,15 @@ namespace Avalonia.Controls
                 o => o.WindowStartupLocation,
                 (o, v) => o.WindowStartupLocation = v);
 
+        /// <summary>
+        /// Defines the <see cref="AllowTransparency"/> property.
+        /// </summary>
+        public static readonly DirectProperty<Window, bool> AllowTransparencyProperty =
+            AvaloniaProperty.RegisterDirect<Window, bool>(
+                nameof(AllowTransparency),
+                o => o.AllowTransparency,
+                (o, v) => o.AllowTransparency = v);
+
         public static readonly StyledProperty<bool> CanResizeProperty =
             AvaloniaProperty.Register<Window, bool>(nameof(CanResize), true);
 
@@ -127,6 +136,8 @@ namespace Avalonia.Controls
 
             WindowStateProperty.Changed.AddClassHandler<Window>(
                 (w, e) => { if (w.PlatformImpl != null) w.PlatformImpl.WindowState = (WindowState)e.NewValue; });
+
+
         }
 
         /// <summary>
@@ -351,6 +362,7 @@ namespace Avalonia.Controls
 
             EnsureInitialized();
             SetWindowStartupLocation();
+            SetAllowTransparency();
             IsVisible = true;
             LayoutManager.Instance.ExecuteInitialLayoutPass(this);
 
@@ -428,6 +440,11 @@ namespace Avalonia.Controls
             {
                 window.IsEnabled = isEnabled;
             }
+        }
+
+        void SetAllowTransparency()
+        {
+            PlatformImpl?.SetAllowTransparency(AllowTransparency);
         }
 
         void SetWindowStartupLocation()

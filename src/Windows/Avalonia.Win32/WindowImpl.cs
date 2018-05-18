@@ -901,5 +901,11 @@ namespace Avalonia.Win32
 
             _resizable = value;
         }
+
+        public void SetAllowTransparency(bool value)
+        {
+            UnmanagedMethods.SetWindowLong(_hwnd, (int)UnmanagedMethods.WindowLongParam.GWL_EXSTYLE, GetWindowLong(_hwnd, (int)UnmanagedMethods.WindowLongParam.GWL_EXSTYLE) | (int)UnmanagedMethods.WindowStyles.WS_EX_LAYERED);
+            UnmanagedMethods.SetLayeredWindowAttributes(_hwnd, new IntPtr(0xFF0000), new IntPtr(0xFFFF00), new IntPtr(0x00000001));
+        }
     }
 }

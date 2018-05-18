@@ -38,9 +38,19 @@ namespace Avalonia.Controls
                 o => o.Owner,
                 (o, v) => o.Owner = v);
 
+        /// <summary>
+        /// Defines the <see cref="AllowTransparency"/> property.
+        /// </summary>
+        public static readonly DirectProperty<WindowBase, bool> AllowTransparencyProperty =
+            AvaloniaProperty.RegisterDirect<WindowBase, bool>(
+                nameof(AllowTransparency),
+                o => o.AllowTransparency,
+                (o, v) => o.AllowTransparency = v);
+
         private bool _hasExecutedInitialLayoutPass;
         private bool _isActive;
         private bool _ignoreVisibilityChange;
+        private bool _allowTransparency;
         private WindowBase _owner;
 
         static WindowBase()
@@ -122,6 +132,15 @@ namespace Avalonia.Controls
         {
             get { return _owner; }
             set { SetAndRaise(OwnerProperty, ref _owner, value); }
+        }
+
+        /// <summary>
+        /// Gets or sets the allow transparency of the window.
+        /// </summary>
+        public bool AllowTransparency
+        {
+            get { return _allowTransparency; }
+            set { SetAndRaise(AllowTransparencyProperty, ref _allowTransparency, value); }
         }
 
         /// <summary>

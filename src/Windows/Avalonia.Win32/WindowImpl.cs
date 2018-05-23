@@ -32,6 +32,7 @@ namespace Avalonia.Win32
         private bool _trackingMouse;
         private bool _decorated = true;
         private bool _resizable = true;
+        private bool _allowtransparency = false;
         private double _scaling = 1;
         private WindowState _showWindowState;
         private WindowState _lastWindowState;
@@ -614,7 +615,14 @@ namespace Avalonia.Win32
                                 : RawMouseEventType.MiddleButtonDown,
                         new Point(0, 0), GetMouseModifiers(wParam));
                     break;
-
+                case UnmanagedMethods.WindowsMessage.WM_ERASEBKGND:
+                    if(_allowtransparency)
+                    {
+                        RECT rect;
+                        GetClientRect(_hwnd, out rect);
+                        FillRect(wParam, out rect, new IntPtr(0x000000));
+                    }
+                    break;
                 case UnmanagedMethods.WindowsMessage.WM_PAINT:
                     UnmanagedMethods.PAINTSTRUCT ps;
 
@@ -904,8 +912,12 @@ namespace Avalonia.Win32
 
         public void SetAllowTransparency(bool value)
         {
-            UnmanagedMethods.SetWindowLong(_hwnd, (int)UnmanagedMethods.WindowLongParam.GWL_EXSTYLE, GetWindowLong(_hwnd, (int)UnmanagedMethods.WindowLongParam.GWL_EXSTYLE) | (int)UnmanagedMethods.WindowStyles.WS_EX_LAYERED);
-            UnmanagedMethods.SetLayeredWindowAttributes(_hwnd, new IntPtr(0xFF0000), new IntPtr(0xFFFF00), new IntPtr(0x00000001));
+            _allowtransparency = value;
+            if(_allowtransparency)
+            {
+                UnmanagedMethods.SetWindowLong(_hwnd, (int)UnmanagedMethods.WindowLongParam.GWL_EXSTYLE, GetWindowLong(_hwnd, (int)UnmanagedMethods.WindowLongParam.GWL_EXSTYLE) | (int)UnmanagedMethods.WindowStyles.WS_EX_LAYERED);
+                UnmanagedMethods.SetLayeredWindowAttributes(_hwnd, new IntPtr(0x000000), new IntPtr(1), new IntPtr(0x00000001));
+            }
         }
     }
 }

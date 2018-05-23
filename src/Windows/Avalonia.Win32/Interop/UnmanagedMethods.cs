@@ -579,7 +579,17 @@ namespace Avalonia.Win32.Interop
             public byte rgbRed;
             public byte rgbReserved;
         }
-
+        [StructLayout(LayoutKind.Sequential)]
+        public struct BITMAP
+        {
+            public long bmType;
+            public long bmWidth;
+            public long bmHeight;
+            public long bmWidthBytes;
+            public ushort bmPlanes;
+            public ushort bmBitsPixel;
+            public IntPtr bmBits;
+        }
         [StructLayout(LayoutKind.Sequential)]
         public struct BITMAPINFOHEADER
         {
@@ -701,6 +711,9 @@ namespace Avalonia.Win32.Interop
 
         [DllImport("user32.dll")]
         public static extern bool GetClientRect(IntPtr hwnd, out RECT lpRect);
+
+        [DllImport("user32.dll")]
+        public static extern int FillRect(IntPtr hDC, out RECT lprc, IntPtr hbr);
 
         [DllImport("user32.dll")]
         public static extern bool GetCursorPos(out POINT lpPoint);
@@ -954,7 +967,10 @@ namespace Avalonia.Win32.Interop
         public static extern int SetDIBitsToDevice(IntPtr hdc, int XDest, int YDest, uint
                 dwWidth, uint dwHeight, int XSrc, int YSrc, uint uStartScan, uint cScanLines,
             IntPtr lpvBits, [In] ref BITMAPINFOHEADER lpbmi, uint fuColorUse);
-        
+        [DllImport("gdi32.dll")]
+        public static extern int GetObject(IntPtr hgdiobj, int cbBuffer, out BITMAP lpvObject);
+        [DllImport("gdi32.dll")]
+        public static extern IntPtr CreateBitmap(int nWidth, int nHeight, uint cPlanes, uint cBitsPerPel, IntPtr lpvBits);
         [DllImport("kernel32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool CloseHandle(IntPtr hObject);

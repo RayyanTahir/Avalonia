@@ -1,0 +1,10 @@
+<Window xmlns="https://github.com/avaloniaui"
+        Title="AvaloniaUI WindowTransparency Test"
+        Background="Transparent"
+        AllowTransparency="True"
+        Width="800"
+        Height="600">
+  <Grid Margin="30" Background="White">
+    <TextBlock Text="Window Transparency Test"/>
+  </Grid>
+</Window>

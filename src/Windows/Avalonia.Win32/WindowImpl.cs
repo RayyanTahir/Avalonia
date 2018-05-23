@@ -915,8 +915,8 @@ namespace Avalonia.Win32
             _allowtransparency = value;
             if(_allowtransparency)
             {
-                UnmanagedMethods.SetWindowLong(_hwnd, (int)UnmanagedMethods.WindowLongParam.GWL_EXSTYLE, GetWindowLong(_hwnd, (int)UnmanagedMethods.WindowLongParam.GWL_EXSTYLE) | (int)UnmanagedMethods.WindowStyles.WS_EX_LAYERED);
-                UnmanagedMethods.SetLayeredWindowAttributes(_hwnd, new IntPtr(0x000000), new IntPtr(1), new IntPtr(0x00000001));
+                SetWindowLong(_hwnd, (int)WindowLongParam.GWL_EXSTYLE, GetWindowLong(_hwnd, (int)WindowLongParam.GWL_EXSTYLE) | (int)WindowStyles.WS_EX_LAYERED);
+                SetLayeredWindowAttributes(_hwnd, new IntPtr(0x000000), new IntPtr(1), new IntPtr(0x00000001));
             }
         }
     }

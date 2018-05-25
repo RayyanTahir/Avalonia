@@ -9,10 +9,19 @@ namespace WindowTransparencyTest
 {
     public class MainWindow : Window
     {
+        Button btnOpen;
         public MainWindow()
         {
             this.InitializeComponent();
             this.AttachDevTools();
+            btnOpen = this.FindControl<Button>("btnOpen");
+            btnOpen.Click += (s, e) => 
+            {
+                Dialog dlg = new Dialog();
+                dlg.Owner = this;
+                dlg.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+                dlg.Show();
+            };
         }
 
         private void InitializeComponent()

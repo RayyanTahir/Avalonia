@@ -362,7 +362,6 @@ namespace Avalonia.Controls
 
             EnsureInitialized();
             SetWindowStartupLocation();
-            SetAllowTransparency();
             IsVisible = true;
             LayoutManager.Instance.ExecuteInitialLayoutPass(this);
 
@@ -371,6 +370,7 @@ namespace Avalonia.Controls
                 PlatformImpl?.Show();
                 Renderer?.Start();
             }
+            SetAllowTransparency();
         }
 
         /// <summary>

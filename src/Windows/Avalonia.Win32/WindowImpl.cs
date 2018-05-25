@@ -249,7 +249,7 @@ namespace Avalonia.Win32
                 return;
             }
 
-            var style = (UnmanagedMethods.WindowStyles)UnmanagedMethods.GetWindowLong(_hwnd, (int)UnmanagedMethods.WindowLongParam.GWL_STYLE);            
+            var style = (UnmanagedMethods.WindowStyles)UnmanagedMethods.GetWindowLong(_hwnd, (int)UnmanagedMethods.WindowLongParam.GWL_STYLE);
 
             style |= UnmanagedMethods.WindowStyles.WS_OVERLAPPEDWINDOW;
 
@@ -292,7 +292,7 @@ namespace Avalonia.Win32
 
             _decorated = value;
 
-            if(_decorated)
+            if (_decorated)
             {
                 if (_resizable)
                 {
@@ -616,20 +616,46 @@ namespace Avalonia.Win32
                         new Point(0, 0), GetMouseModifiers(wParam));
                     break;
                 case UnmanagedMethods.WindowsMessage.WM_ERASEBKGND:
-                    if(_allowtransparency)
+                    if (_allowtransparency)
                     {
-                        RECT rect;
-                        GetClientRect(_hwnd, out rect);
-                        FillRect(wParam, out rect, new IntPtr(0x000000));
+                        //RECT rect;
+                        //GetClientRect(_hwnd, out rect);
+                        //FillRect(wParam, out rect, new IntPtr(0x000000));
                     }
                     break;
                 case UnmanagedMethods.WindowsMessage.WM_PAINT:
                     UnmanagedMethods.PAINTSTRUCT ps;
-
+                    
                     if (UnmanagedMethods.BeginPaint(_hwnd, out ps) != IntPtr.Zero)
                     {
+
                         var f = Scaling;
                         var r = ps.rcPaint;
+
+                        int iWidth = (int)ClientSize.Width;
+                        int iHeight = (int)ClientSize.Height;
+                        // Make mem DC + mem  bitmap
+                        IntPtr hdcScreen = GetDC(IntPtr.Zero);
+                        IntPtr hDC = CreateCompatibleDC(hdcScreen);
+                        IntPtr hBmp = new System.Drawing.Bitmap(iWidth, iHeight).GetHbitmap(System.Drawing.Color.Black);
+                        IntPtr hBmpOld = SelectObject(hDC, hBmp);
+
+
+                        BLENDFUNCTION blend = new BLENDFUNCTION();
+                        blend.BlendOp = (byte)BLENDFUNCTION.BlendOP.AC_SRC_OVER;
+                        blend.BlendFlags = 0;
+                        blend.SourceConstantAlpha = 255;
+                        blend.AlphaFormat = (byte)BLENDFUNCTION.BlendOP.AC_SRC_ALPHA;
+                        Point ptPos = new Point(r.left, r.top);
+                        Size sizeWnd = new Size(iWidth, iHeight);
+                        Point ptSrc = new Point(0, 0);
+                        bool ress = UpdateLayeredWindow(_hwnd, hdcScreen, ref ptPos, ref sizeWnd, hDC, ref ptSrc, 0, ref blend, 2);
+
+                        SelectObject(hDC, hBmpOld);
+                        DeleteObject(hBmp);
+                        DeleteDC(hDC);
+                        ReleaseDC(IntPtr.Zero, hdcScreen);
+
                         Paint?.Invoke(new Rect(r.left / f, r.top / f, (r.right - r.left) / f, (r.bottom - r.top) / f));
                         UnmanagedMethods.EndPaint(_hwnd, ref ps);
                     }
@@ -666,7 +692,7 @@ namespace Avalonia.Win32
 
                     MINMAXINFO mmi = Marshal.PtrToStructure<UnmanagedMethods.MINMAXINFO>(lParam);
 
-                    if  (_minSize.Width > 0)
+                    if (_minSize.Width > 0)
                         mmi.ptMinTrackSize.X = (int)((_minSize.Width * Scaling) + BorderThickness.Left + BorderThickness.Right);
 
                     if (_minSize.Height > 0)
@@ -909,14 +935,14 @@ namespace Avalonia.Win32
 
             _resizable = value;
         }
-
         public void SetAllowTransparency(bool value)
         {
             _allowtransparency = value;
-            if(_allowtransparency)
+            if (_allowtransparency && !_decorated)
             {
                 SetWindowLong(_hwnd, (int)WindowLongParam.GWL_EXSTYLE, GetWindowLong(_hwnd, (int)WindowLongParam.GWL_EXSTYLE) | (int)WindowStyles.WS_EX_LAYERED);
-                SetLayeredWindowAttributes(_hwnd, new IntPtr(0x000000), new IntPtr(1), new IntPtr(0x00000001));
+                //SetLayeredWindowAttributes(_hwnd, new IntPtr(0x000000), new IntPtr(1), new IntPtr(0x00000001));
+                
             }
         }
     }

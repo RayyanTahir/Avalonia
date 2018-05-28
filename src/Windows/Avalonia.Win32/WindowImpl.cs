@@ -632,29 +632,29 @@ namespace Avalonia.Win32
                         var f = Scaling;
                         var r = ps.rcPaint;
 
-                        int iWidth = (int)ClientSize.Width;
-                        int iHeight = (int)ClientSize.Height;
-                        // Make mem DC + mem  bitmap
-                        IntPtr hdcScreen = GetDC(IntPtr.Zero);
-                        IntPtr hDC = CreateCompatibleDC(hdcScreen);
-                        IntPtr hBmp = new System.Drawing.Bitmap(iWidth, iHeight).GetHbitmap(System.Drawing.Color.Black);
-                        IntPtr hBmpOld = SelectObject(hDC, hBmp);
+                        //int iWidth = (int)ClientSize.Width;
+                        //int iHeight = (int)ClientSize.Height;
+                        //// Make mem DC + mem  bitmap
+                        //IntPtr hdcScreen = GetDC(IntPtr.Zero);
+                        //IntPtr hDC = CreateCompatibleDC(hdcScreen);
+                        //IntPtr hBmp = new System.Drawing.Bitmap(iWidth, iHeight).GetHbitmap(System.Drawing.Color.Black);
+                        //IntPtr hBmpOld = SelectObject(hDC, hBmp);
 
 
-                        BLENDFUNCTION blend = new BLENDFUNCTION();
-                        blend.BlendOp = (byte)BLENDFUNCTION.BlendOP.AC_SRC_OVER;
-                        blend.BlendFlags = 0;
-                        blend.SourceConstantAlpha = 255;
-                        blend.AlphaFormat = (byte)BLENDFUNCTION.BlendOP.AC_SRC_ALPHA;
-                        Point ptPos = new Point(r.left, r.top);
-                        Size sizeWnd = new Size(iWidth, iHeight);
-                        Point ptSrc = new Point(0, 0);
-                        bool ress = UpdateLayeredWindow(_hwnd, hdcScreen, ref ptPos, ref sizeWnd, hDC, ref ptSrc, 0, ref blend, 2);
+                        //BLENDFUNCTION blend = new BLENDFUNCTION();
+                        //blend.BlendOp = (byte)BLENDFUNCTION.BlendOP.AC_SRC_OVER;
+                        //blend.BlendFlags = 0;
+                        //blend.SourceConstantAlpha = 255;
+                        //blend.AlphaFormat = (byte)BLENDFUNCTION.BlendOP.AC_SRC_ALPHA;
+                        //Point ptPos = new Point(r.left, r.top);
+                        //Size sizeWnd = new Size(iWidth, iHeight);
+                        //Point ptSrc = new Point(0, 0);
+                        //bool ress = UpdateLayeredWindow(_hwnd, hdcScreen, ref ptPos, ref sizeWnd, hDC, ref ptSrc, 0, ref blend, 2);
 
-                        SelectObject(hDC, hBmpOld);
-                        DeleteObject(hBmp);
-                        DeleteDC(hDC);
-                        ReleaseDC(IntPtr.Zero, hdcScreen);
+                        //SelectObject(hDC, hBmpOld);
+                        //DeleteObject(hBmp);
+                        //DeleteDC(hDC);
+                        //ReleaseDC(IntPtr.Zero, hdcScreen);
 
                         Paint?.Invoke(new Rect(r.left / f, r.top / f, (r.right - r.left) / f, (r.bottom - r.top) / f));
                         UnmanagedMethods.EndPaint(_hwnd, ref ps);
@@ -940,7 +940,7 @@ namespace Avalonia.Win32
             _allowtransparency = value;
             if (_allowtransparency && !_decorated)
             {
-                SetWindowLong(_hwnd, (int)WindowLongParam.GWL_EXSTYLE, GetWindowLong(_hwnd, (int)WindowLongParam.GWL_EXSTYLE) | (int)WindowStyles.WS_EX_LAYERED);
+                //SetWindowLong(_hwnd, (int)WindowLongParam.GWL_EXSTYLE, GetWindowLong(_hwnd, (int)WindowLongParam.GWL_EXSTYLE) | (int)WindowStyles.WS_EX_LAYERED);
                 //SetLayeredWindowAttributes(_hwnd, new IntPtr(0x000000), new IntPtr(1), new IntPtr(0x00000001));
                 
             }

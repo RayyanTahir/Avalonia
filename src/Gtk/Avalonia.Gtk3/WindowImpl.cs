@@ -81,7 +81,12 @@ namespace Avalonia.Gtk3
         public void ShowTaskbarIcon(bool value) => Native.GtkWindowSetSkipTaskbarHint(GtkWidget, !value);
 
         public void CanResize(bool value) => Native.GtkWindowSetResizable(GtkWidget, value);
-        
+
+        public void CanMaximize(bool value)
+        {
+            GtkHeaderBar bar = Native.GtkWindowGetHeaderBar();
+            Native.GtkWindowSetDecorationLayout(bar, value ? ":close,minimize,maximize": ":close,minimize");
+        }
 
         class EmptyDisposable : IDisposable
         {

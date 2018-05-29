@@ -81,6 +81,12 @@ namespace Avalonia.Controls
             AvaloniaProperty.Register<Window, WindowState>(nameof(WindowState));
 
         /// <summary>
+        /// Enables or disables the maximize feature of window
+        /// </summary>
+        public static readonly StyledProperty<bool> CanMaximizeProperty =
+            AvaloniaProperty.Register<Window, bool>(nameof(ShowInTaskbar), true);
+
+        /// <summary>
         /// Defines the <see cref="Title"/> property.
         /// </summary>
         public static readonly StyledProperty<string> TitleProperty =
@@ -120,6 +126,8 @@ namespace Avalonia.Controls
                 (s, e) => s.PlatformImpl?.SetSystemDecorations((bool) e.NewValue));
 
             ShowInTaskbarProperty.Changed.AddClassHandler<Window>((w, e) => w.PlatformImpl?.ShowTaskbarIcon((bool)e.NewValue));
+
+            CanMaximizeProperty.Changed.AddClassHandler<Window>((w, e) => w.PlatformImpl?.CanMaximize((bool)e.NewValue));
 
             IconProperty.Changed.AddClassHandler<Window>((s, e) => s.PlatformImpl?.SetIcon(((WindowIcon)e.NewValue).PlatformImpl));
 
@@ -201,7 +209,7 @@ namespace Avalonia.Controls
             get { return GetValue(HasSystemDecorationsProperty); }
             set { SetValue(HasSystemDecorationsProperty, value); }
         }
-        
+
         /// <summary>
         /// Enables or disables the taskbar icon
         /// </summary>
@@ -210,6 +218,16 @@ namespace Avalonia.Controls
         {
             get { return GetValue(ShowInTaskbarProperty); }
             set { SetValue(ShowInTaskbarProperty, value); }
+        }
+
+        /// <summary>
+        /// Enables or disables the maximize feature in window
+        /// </summary>
+        /// 
+        public bool CanMaximize
+        {
+            get { return GetValue(CanMaximizeProperty); }
+            set { SetValue(CanMaximizeProperty, value); }
         }
 
         /// <summary>

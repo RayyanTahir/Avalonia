@@ -293,6 +293,12 @@ namespace Avalonia.Gtk3.Interop
             public delegate IntPtr gtk_clipboard_get_for_display(IntPtr display, IntPtr atom);
 
             [UnmanagedFunctionPointer(CallingConvention.Cdecl), GtkImport(GtkDll.Gtk)]
+            public delegate void gtk_header_bar_set_decoration_layout(GtkHeaderBar gtkHeaderBar, String Layout);
+
+            [UnmanagedFunctionPointer(CallingConvention.Cdecl), GtkImport(GtkDll.Gtk)]
+            public delegate GtkHeaderBar gtk_header_bar_new();
+
+            [UnmanagedFunctionPointer(CallingConvention.Cdecl), GtkImport(GtkDll.Gtk)]
             public delegate void gtk_clipboard_request_text(IntPtr clipboard, GtkClipboardTextReceivedFunc callback, IntPtr user_data);
 
             [UnmanagedFunctionPointer(CallingConvention.Cdecl), GtkImport(GtkDll.Gtk)]
@@ -398,6 +404,8 @@ namespace Avalonia.Gtk3.Interop
         public static D.gdk_screen_get_monitor_workarea GdkScreenGetMonitorWorkarea;
         public static D.gtk_window_set_decorated GtkWindowSetDecorated;
         public static D.gtk_window_set_resizable GtkWindowSetResizable;
+        public static D.gtk_header_bar_new GtkWindowGetHeaderBar;
+        public static D.gtk_header_bar_set_decoration_layout GtkWindowSetDecorationLayout;
         public static D.gtk_window_set_skip_taskbar_hint GtkWindowSetSkipTaskbarHint;
         public static D.gtk_window_get_skip_taskbar_hint GtkWindowGetSkipTaskbarHint;
         public static D.gtk_window_set_skip_pager_hint GtkWindowSetSkipPagerHint;

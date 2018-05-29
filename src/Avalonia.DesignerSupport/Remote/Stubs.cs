@@ -104,6 +104,11 @@ namespace Avalonia.DesignerSupport.Remote
         public void CanResize(bool value)
         {
         }
+
+        public void CanMaximize(bool value)
+        {
+
+        }
     }
 
     class ClipboardStub : IClipboard

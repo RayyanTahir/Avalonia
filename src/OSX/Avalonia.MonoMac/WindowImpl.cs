@@ -10,6 +10,7 @@ namespace Avalonia.MonoMac
     {
         public bool IsDecorated = true;
         public bool IsResizable = true;
+        public bool IsMaximizable = true;
         public CGRect? UndecoratedLastUnmaximizedFrame;
 
         private WindowState _lastWindowState;
@@ -101,6 +102,9 @@ namespace Avalonia.MonoMac
             if (IsResizable)
                 windowStyle |= NSWindowStyle.Resizable;
 
+            if (IsMaximizable)
+                windowStyle |= NSWindowStyle.Resizable;
+
             return windowStyle;
         }
 
@@ -139,6 +143,11 @@ namespace Avalonia.MonoMac
             // May be add some magic to our run loop or something
             NSApplication.SharedApplication.RunModalForWindow(Window);
             return new ModalDisposable(this);
+        }
+
+        public void CanMaximize(bool value)
+        {
+            throw new NotImplementedException();
         }
     }
 }

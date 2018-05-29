@@ -56,6 +56,11 @@ namespace Avalonia.Platform
         void CanResize(bool value);
 
         /// <summary>
+        /// Enables or disables maximizing of the window
+        /// </summary>
+        void CanMaximize(bool value);
+
+        /// <summary>
         /// Gets or sets a method called before the underlying implementation is destroyed.
         /// Return true to prevent the underlying implementation from closing.
         /// </summary>

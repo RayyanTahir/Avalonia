@@ -84,8 +84,7 @@ namespace Avalonia.Gtk3
 
         public void CanMaximize(bool value)
         {
-            GtkHeaderBar bar = Native.GtkWindowGetHeaderBar();
-            Native.GtkWindowSetDecorationLayout(bar, value ? ":close,minimize,maximize": ":close,minimize");
+            CanResize(value);
         }
 
         class EmptyDisposable : IDisposable

@@ -50,23 +50,7 @@ namespace Avalonia.Gtk3.Interop
         GTK_RESIZE_QUEUE,
         GTK_RESIZE_IMMEDIATE
     }
-    class GtkContainer : GtkWidget
-    {
-        public int borderWidth { get; set; }
-        public GtkWidget child { set { } }
-        public GtkResizeMode resizeMode { get; set; }
-    }
-    class GtkHeaderBar : GtkContainer
-    {
-        public GtkWidget customTitle { get; set; }
-        public String decorationLayout { get; set; }
-        public bool decorationLayoutSet { get; set; }
-        public bool hasSubtitle { get; set; }
-        public bool showCloseButton { get; set; }
-        public int spacing { get; set; }
-        public String subtitle { get; set; }
-        public String title { get; set; }
-    }
+    
     class GtkWindow : GtkWidget
     {
         public static GtkWindow Null { get; } = new GtkWindow();

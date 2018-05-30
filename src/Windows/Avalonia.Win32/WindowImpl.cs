@@ -907,9 +907,9 @@ namespace Avalonia.Win32
             var style = (WindowStyles)GetWindowLong(_hwnd, (int)WindowLongParam.GWL_STYLE);
 
             if (value)
-                style |= WindowStyles.WS_MAXIMIZE | WindowStyles.WS_MAXIMIZEBOX;
+                style |= WindowStyles.WS_MAXIMIZEBOX;
             else
-                style &= ~(WindowStyles.WS_MAXIMIZE & WindowStyles.WS_MAXIMIZEBOX);
+                style &= ~(WindowStyles.WS_MAXIMIZEBOX);
 
             SetWindowLong(_hwnd, (int)WindowLongParam.GWL_STYLE, (uint)style);
         }

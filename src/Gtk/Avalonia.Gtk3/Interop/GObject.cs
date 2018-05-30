@@ -37,20 +37,14 @@ namespace Avalonia.Gtk3.Interop
 
     class GInputStream : GObject
     {
-
+        
     }
 
     class GtkWidget : GObject
     {
+        
+    }
 
-    }
-    enum GtkResizeMode
-    {
-        GTK_RESIZE_PARENT,
-        GTK_RESIZE_QUEUE,
-        GTK_RESIZE_IMMEDIATE
-    }
-    
     class GtkWindow : GtkWidget
     {
         public static GtkWindow Null { get; } = new GtkWindow();
@@ -86,12 +80,12 @@ namespace Avalonia.Gtk3.Interop
 
     class GtkDialog : GtkWindow
     {
-
+        
     }
 
     class GtkFileChooser : GtkDialog
     {
-
+        
     }
 }
 

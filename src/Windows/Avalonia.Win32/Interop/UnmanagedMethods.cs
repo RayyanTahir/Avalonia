@@ -720,6 +720,10 @@ namespace Avalonia.Win32.Interop
 
         public delegate bool EnumWindowsProc(IntPtr hwnd, IntPtr lParam);
 
+        [DllImport("kernel32.dll")]
+        public static extern uint GetLastError();
+        // GetLastError is save!
+
         [DllImport("user32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool EnumChildWindows(IntPtr hwndParent, EnumWindowsProc lpEnumFunc, IntPtr lParam);

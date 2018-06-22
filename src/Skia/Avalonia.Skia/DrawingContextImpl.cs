@@ -421,6 +421,11 @@ namespace Avalonia.Skia
             Canvas.Restore();
         }
 
+        public IRenderTargetBitmapImpl GetBitmap()
+        {
+            throw new NotImplementedException();
+        }
+
         private Matrix _currentTransform;
 
         public Matrix Transform

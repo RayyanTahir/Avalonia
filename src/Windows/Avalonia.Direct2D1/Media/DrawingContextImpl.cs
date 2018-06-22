@@ -478,5 +478,10 @@ namespace Avalonia.Direct2D1.Media
         {
             PopLayer();
         }
+
+        public IRenderTargetBitmapImpl GetBitmap()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

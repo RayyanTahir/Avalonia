@@ -36,22 +36,25 @@ namespace Avalonia.Rendering
         private int _lastSceneId = -1;
         private DisplayDirtyRects _dirtyRectsDisplay = new DisplayDirtyRects();
         private IRef<IDrawOperation> _currentDraw;
+        Action UpdateLayeredWindow;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DeferredRenderer"/> class.
         /// </summary>
         /// <param name="root">The control to render.</param>
         /// <param name="renderLoop">The render loop.</param>
+        /// <param name="updateLayeredWindowAction"></param>
         /// <param name="sceneBuilder">The scene builder to use. Optional.</param>
         /// <param name="dispatcher">The dispatcher to use. Optional.</param>
         public DeferredRenderer(
             IRenderRoot root,
             IRenderLoop renderLoop,
+            Action updateLayeredWindowAction = null,
             ISceneBuilder sceneBuilder = null,
             IDispatcher dispatcher = null)
         {
             Contract.Requires<ArgumentNullException>(root != null);
-
+            UpdateLayeredWindow = updateLayeredWindowAction;
             _dispatcher = dispatcher ?? Dispatcher.UIThread;
             _root = root;
             _sceneBuilder = sceneBuilder ?? new SceneBuilder();
@@ -207,8 +210,8 @@ namespace Avalonia.Rendering
                     {
                         context = RenderTarget.CreateDrawingContext(this);
                         Layers.Update(scene, context);
-
                         RenderToLayers(scene);
+
 
                         if (DebugFramesPath != null)
                         {
@@ -252,7 +255,7 @@ namespace Avalonia.Rendering
                 if (!clipBounds.IsEmpty && node.Opacity > 0)
                 {
                     var isLayerRoot = node.Visual == layer;
-
+                    
                     node.BeginRender(context, isLayerRoot);
 
                     foreach (var operation in node.DrawOperations)
@@ -396,7 +399,6 @@ namespace Avalonia.Rendering
                             _sceneBuilder.Update(scene, visual);
                         }
                     }
-
                     var oldScene = Interlocked.Exchange(ref _scene, sceneRef);
                     oldScene?.Dispose();
 
@@ -408,6 +410,7 @@ namespace Avalonia.Rendering
                     var oldScene = Interlocked.Exchange(ref _scene, null);
                     oldScene?.Dispose();
                 }
+                UpdateLayeredWindow?.Invoke();
             }
             finally
             {

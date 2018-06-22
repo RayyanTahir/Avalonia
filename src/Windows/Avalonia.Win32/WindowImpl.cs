@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
+using System.Drawing;
 using System.Reactive.Disposables;
 using System.Runtime.InteropServices;
 using Avalonia.Controls;
@@ -126,7 +127,7 @@ namespace Avalonia.Win32
         {
             var loop = AvaloniaLocator.Current.GetService<IRenderLoop>();
             return Win32Platform.UseDeferredRendering ?
-                (IRenderer)new DeferredRenderer(root, loop) :
+                (IRenderer)new DeferredRenderer(root, loop, ()=> { UpdateLayeredWindow(); }) :
                 new ImmediateRenderer(root);
         }
 
@@ -624,43 +625,18 @@ namespace Avalonia.Win32
                     }
                     break;
                 case UnmanagedMethods.WindowsMessage.WM_PAINT:
-                    UnmanagedMethods.PAINTSTRUCT ps;
-                    
-                    if (UnmanagedMethods.BeginPaint(_hwnd, out ps) != IntPtr.Zero)
-                    {
+                    //UnmanagedMethods.PAINTSTRUCT ps;
 
-                        var f = Scaling;
-                        var r = ps.rcPaint;
+                    //if (UnmanagedMethods.BeginPaint(_hwnd, out ps) != IntPtr.Zero)
+                    //{
+                    //    var f = Scaling;
+                    //    var r = ps.rcPaint;
 
-                        //int iWidth = (int)ClientSize.Width;
-                        //int iHeight = (int)ClientSize.Height;
-                        //// Make mem DC + mem  bitmap
-                        //IntPtr hdcScreen = GetDC(IntPtr.Zero);
-                        //IntPtr hDC = CreateCompatibleDC(hdcScreen);
-                        //IntPtr hBmp = new System.Drawing.Bitmap(iWidth, iHeight).GetHbitmap(System.Drawing.Color.Black);
-                        //IntPtr hBmpOld = SelectObject(hDC, hBmp);
-
-
-                        //BLENDFUNCTION blend = new BLENDFUNCTION();
-                        //blend.BlendOp = (byte)BLENDFUNCTION.BlendOP.AC_SRC_OVER;
-                        //blend.BlendFlags = 0;
-                        //blend.SourceConstantAlpha = 255;
-                        //blend.AlphaFormat = (byte)BLENDFUNCTION.BlendOP.AC_SRC_ALPHA;
-                        //Point ptPos = new Point(r.left, r.top);
-                        //Size sizeWnd = new Size(iWidth, iHeight);
-                        //Point ptSrc = new Point(0, 0);
-                        //bool ress = UpdateLayeredWindow(_hwnd, hdcScreen, ref ptPos, ref sizeWnd, hDC, ref ptSrc, 0, ref blend, 2);
-
-                        //SelectObject(hDC, hBmpOld);
-                        //DeleteObject(hBmp);
-                        //DeleteDC(hDC);
-                        //ReleaseDC(IntPtr.Zero, hdcScreen);
-
-                        Paint?.Invoke(new Rect(r.left / f, r.top / f, (r.right - r.left) / f, (r.bottom - r.top) / f));
-                        UnmanagedMethods.EndPaint(_hwnd, ref ps);
-                    }
-
-                    return IntPtr.Zero;
+                    //    Paint?.Invoke(new Rect(r.left / f, r.top / f, (r.right - r.left) / f, (r.bottom - r.top) / f));
+                    //    UnmanagedMethods.EndPaint(_hwnd, ref ps);
+                    //}
+                    //return IntPtr.Zero;
+                    break;
 
                 case UnmanagedMethods.WindowsMessage.WM_SIZE:
                     var size = (UnmanagedMethods.SizeCommand)wParam;
@@ -683,7 +659,6 @@ namespace Avalonia.Win32
                     }
 
                     return IntPtr.Zero;
-
                 case UnmanagedMethods.WindowsMessage.WM_MOVE:
                     PositionChanged?.Invoke(new Point((short)(ToInt32(lParam) & 0xffff), (short)(ToInt32(lParam) >> 16)));
                     return IntPtr.Zero;
@@ -941,8 +916,49 @@ namespace Avalonia.Win32
             if (_allowtransparency && !_decorated)
             {
                 //SetWindowLong(_hwnd, (int)WindowLongParam.GWL_EXSTYLE, GetWindowLong(_hwnd, (int)WindowLongParam.GWL_EXSTYLE) | (int)WindowStyles.WS_EX_LAYERED);
-                //SetLayeredWindowAttributes(_hwnd, new IntPtr(0x000000), new IntPtr(1), new IntPtr(0x00000001));
                 
+                //UpdateLayeredWindow();
+            }
+        }
+        private void UpdateLayeredWindow()
+        {
+            byte alpha = 255;
+            RECT RECT;
+            GetWindowRect(_hwnd, out RECT);
+            Bitmap bitmap = new Bitmap((int)RECT.right, (int)RECT.bottom, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+            using (Graphics graphics = Graphics.FromImage(bitmap))
+            {
+                Rectangle rect = new Rectangle(0, 0, (int)RECT.right, (int)RECT.bottom);
+                graphics.FillRectangle(new SolidBrush(Color.White), rect);
+                //Paint?.Invoke(new Rect(rect.Left, rect.Top, rect.Right, rect.Bottom));
+                IntPtr dC = GetDC(IntPtr.Zero);
+                IntPtr hDC = CreateCompatibleDC(dC);
+                IntPtr zero = IntPtr.Zero;
+                IntPtr hObject = IntPtr.Zero;
+                try
+                {
+                    zero = bitmap.GetHbitmap(Color.FromArgb(0));
+                    hObject = SelectObject(hDC, zero);
+                    Size psize = new Size(bitmap.Width, bitmap.Height);
+                    Point pprSrc = new Point(0, 0);
+                    Point pptDst = new Point(RECT.left, RECT.top);
+                    BLENDFUNCTION pblend = new BLENDFUNCTION();
+                    pblend.BlendOp = 0;
+                    pblend.BlendFlags = 0;
+                    pblend.SourceConstantAlpha = alpha;
+                    pblend.AlphaFormat = 1;
+                    //bool res = UnmanagedMethods.UpdateLayeredWindow(_hwnd, dC, ref pptDst, ref psize, hDC, ref pprSrc, 0, ref pblend, 2); 
+                }
+                finally
+                {
+                    ReleaseDC(IntPtr.Zero, dC);
+                    if (zero != IntPtr.Zero)
+                    {
+                        SelectObject(hDC, hObject);
+                        DeleteObject(zero);
+                    }
+                    DeleteDC(hDC);
+                }
             }
         }
     }

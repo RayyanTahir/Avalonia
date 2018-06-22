@@ -137,5 +137,7 @@ namespace Avalonia.Platform
         /// Pops the latest pushed geometry clip.
         /// </summary>
         void PopGeometryClip();
+
+        IRenderTargetBitmapImpl GetBitmap();
     }
 }

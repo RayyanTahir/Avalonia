@@ -402,5 +402,10 @@ namespace Avalonia.Rendering.SceneGraph
 
             return null;
         }
+
+        public IRenderTargetBitmapImpl GetBitmap()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

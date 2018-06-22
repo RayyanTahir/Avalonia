@@ -3,7 +3,7 @@
         Background="Transparent"
         WindowStartupLocation="CenterScreen"
         AllowTransparency="True"
-        HasSystemDecorations="False"
+        HasSystemDecorations="True"
         Width="450"
         Height="450">
   <StackPanel Background="Transparent">
